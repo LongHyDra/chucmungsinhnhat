@@ -2,32 +2,37 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Chúc mừng sinh nhật em yêu 💖</title>
+  <title>Chúc mừng sinh nhật 💖</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: radial-gradient(circle, #ffdde1, #ee9ca7);
       font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
       text-align: center;
       color: white;
+      overflow: hidden;
     }
 
-    h1 {
-      margin-top: 60px;
-      font-size: 3.5em;
-      animation: neon 1.5s ease-in-out infinite alternate;
+    .form-container, .confirm-container, .birthday-container {
+      display: none;
+      padding-top: 60px;
     }
 
-    p {
-      font-size: 1.8em;
-      margin-top: 20px;
-      animation: fadeIn 3s ease forwards;
+    .active {
+      display: block;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      margin: 10px;
+      width: 250px;
     }
 
     button {
-      margin-top: 30px;
       padding: 10px 20px;
       font-size: 1.2em;
       background-color: #ff69b4;
@@ -36,11 +41,17 @@
       color: white;
       cursor: pointer;
       box-shadow: 0 0 10px #ff1493;
+      margin-top: 20px;
     }
 
-    .photo {
-      margin-top: 40px;
-      animation: fadeIn 3s ease forwards;
+    h1 {
+      font-size: 3em;
+      animation: neon 1.5s ease-in-out infinite alternate;
+    }
+
+    p {
+      font-size: 1.5em;
+      margin-top: 20px;
     }
 
     .photo img {
@@ -57,11 +68,6 @@
     @keyframes neon {
       from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00cc; }
       to { text-shadow: 0 0 20px #fff, 0 0 40px #ff00cc; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     canvas {
@@ -102,56 +108,74 @@
   </style>
 </head>
 <body>
-  <h1>Chúc mừng sinh nhật em yêu 🎉</h1>
-  <p>18 tuổi rồi đó nha! Mong em luôn xinh đẹp, rực rỡ và yêu anh nhiều hơn nữa 😘</p>
 
-  <button onclick="playMusic()">🎵 Phát nhạc</button>
-
-  <div class="photo">
-    <img src="./anhcuoi.jpg" alt="Ảnh cưới của hai đứa mình 💑">
+  <!-- Bước 1: Nhập thông tin -->
+  <div class="form-container active" id="step1">
+    <h1>Nhập thông tin của em 💌</h1>
+    <input type="text" id="name" placeholder="Họ và tên">
+    <input type="date" id="dob">
+    <br>
+    <button onclick="goToConfirm()">Tiếp tục</button>
   </div>
 
-  <audio id="bgmusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Bước 2: Xác nhận -->
+  <div class="confirm-container" id="step2">
+    <h1>Em có đồng ý xem tiếp không? 😘</h1>
+    <button onclick="showBirthday()">Đồng ý 💖</button>
+  </div>
 
-  <canvas id="fireworks"></canvas>
+  <!-- Bước 3: Trang sinh nhật -->
+  <div class="birthday-container" id="step3">
+    <h1>Chúc mừng sinh nhật em yêu 🎉</h1>
+    <p id="message"></p>
+    <button onclick="playMusic()">🎵 Phát nhạc</button>
+    <div class="photo">
+      <img src="./anhcuoi.jpg" alt="Ảnh cưới của hai đứa mình 💑">
+    </div>
+    <audio id="bgmusic" loop>
+      <source src="https://archive.org/download/NoiNayCoAnhSonTungMTPZingMP3/Noi%20Nay%20Co%20Anh.mp3" type="audio/mpeg">
+    </audio>
+    <canvas id="fireworks"></canvas>
+  </div>
 
   <script>
+    function goToConfirm() {
+      const name = document.getElementById('name').value;
+      const dob = document.getElementById('dob').value;
+      if (!name || !dob) {
+        alert("Nhập đầy đủ họ tên và ngày sinh nha em!");
+        return;
+      }
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+    }
+
+    function showBirthday() {
+      const name = document.getElementById('name').value;
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step3').classList.add('active');
+      document.getElementById('message').innerText = `${name} ơi, 18 tuổi rồi đó nha! Mong em luôn xinh đẹp, rực rỡ và yêu anh nhiều hơn nữa 😘`;
+    }
+
     function playMusic() {
-      const music = document.getElementById('bgmusic');
-      music.play();
+      document.getElementById('bgmusic').play();
     }
 
     function createHeart() {
       const heart = document.createElement('div');
       heart.className = 'heart';
-
       const size = Math.random() * 20 + 10;
       heart.style.width = `${size}px`;
       heart.style.height = `${size}px`;
-
       const colors = ['#ff0000', '#ff69b4', '#ff1493', '#ff6600', '#ff00cc'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      heart.style.background = color;
+      heart.style.background = colors[Math.floor(Math.random() * colors.length)];
       heart.style.left = Math.random() * window.innerWidth + 'px';
       heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-
-      heart.style.borderRadius = '50%';
-      heart.style.position = 'absolute';
-
-      // Tạo phần trái tim bằng before/after
-      heart.style.setProperty('--color', color);
-      heart.style.zIndex = '0';
-
-      heart.style.setProperty('--size', `${size}px`);
-      heart.style.setProperty('--left', `${Math.random() * window.innerWidth}px`);
-
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 6000);
     }
 
-    setInterval(createHeart, 100); // Tăng tần suất trái tim
+    setInterval(createHeart, 100);
 
     // Fireworks
     const canvas = document.getElementById('fireworks');
@@ -200,10 +224,7 @@
       return `${r},${g},${b}`;
     }
 
-    setInterval(() => {
-      createFirework();
-    }, 1000);
-
+    setInterval(createFirework, 1000);
     function animate() {
       drawFireworks();
       requestAnimationFrame(animate);
