@@ -73,30 +73,25 @@
 
     .heart {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
       transform: rotate(45deg);
       animation: float 6s linear infinite;
+      z-index: 0;
     }
 
     .heart::before,
     .heart::after {
       content: "";
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
       border-radius: 50%;
     }
 
     .heart::before {
-      top: -10px;
+      top: -50%;
       left: 0;
     }
 
     .heart::after {
-      left: -10px;
+      left: -50%;
       top: 0;
     }
 
@@ -131,13 +126,34 @@
     function createHeart() {
       const heart = document.createElement('div');
       heart.className = 'heart';
+
+      const size = Math.random() * 20 + 10;
+      heart.style.width = `${size}px`;
+      heart.style.height = `${size}px`;
+
+      const colors = ['#ff0000', '#ff69b4', '#ff1493', '#ff6600', '#ff00cc'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      heart.style.background = color;
       heart.style.left = Math.random() * window.innerWidth + 'px';
       heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+
+      heart.style.borderRadius = '50%';
+      heart.style.position = 'absolute';
+
+      // Tạo phần trái tim bằng before/after
+      heart.style.setProperty('--color', color);
+      heart.style.zIndex = '0';
+
+      heart.style.setProperty('--size', `${size}px`);
+      heart.style.setProperty('--left', `${Math.random() * window.innerWidth}px`);
+
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 6000);
     }
-    setInterval(createHeart, 300);
 
+    setInterval(createHeart, 100); // Tăng tần suất trái tim
+
+    // Fireworks
     const canvas = document.getElementById('fireworks');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
