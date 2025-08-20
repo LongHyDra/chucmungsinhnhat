@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chúc mừng sinh nhật em yêu 💖</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle, #ffdde1, #ee9ca7);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      margin-top: 60px;
+      font-size: 3.5em;
+      animation: neon 1.5s ease-in-out infinite alternate;
+    }
+
+    p {
+      font-size: 1.8em;
+      margin-top: 20px;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background-color: #ff69b4;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff1493;
+    }
+
+    .photo {
+      margin-top: 40px;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    .photo img {
+      width: 320px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #ff69b4, 0 0 60px #ff1493;
+      transition: transform 0.5s;
+    }
+
+    .photo img:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes neon {
+      from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00cc; }
+      to { text-shadow: 0 0 20px #fff, 0 0 40px #ff00cc; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 6s linear infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Chúc mừng sinh nhật em yêu 🎉</h1>
+  <p>18 tuổi rồi đó nha! Mong em luôn xinh đẹp, rực rỡ và yêu anh nhiều hơn nữa 😘</p>
+
+  <button onclick="playMusic()">🎵 Phát nhạc</button>
+
+  <div class="photo">
+    <img src="./anhcuoi.jpg" alt="Ảnh cưới của hai đứa mình 💑">
+  </div>
+
+  <audio id="bgmusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+  </audio>
+
+  <canvas id="fireworks"></canvas>
+
+  <script>
+    function playMusic() {
+      const music = document.getElementById('bgmusic');
+      music.play();
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 300);
+
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function createFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      const colors = ['#ff00cc', '#ffff00', '#00ffff', '#ff6600', '#00ff00'];
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          radius: Math.random() * 2 + 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          angle: Math.random() * 2 * Math.PI,
+          speed: Math.random() * 5 + 2,
+          alpha: 1
+        });
+      }
+    }
+
+    function drawFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.alpha -= 0.01;
+        if (p.alpha <= 0) particles.splice(index, 1);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(${hexToRgb(p.color)},${p.alpha})`;
+        ctx.fill();
+      });
+    }
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.slice(1), 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `${r},${g},${b}`;
+    }
+
+    setInterval(() => {
+      createFirework();
+    }, 1000);
+
+    function animate() {
+      drawFireworks();
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
