@@ -101,7 +101,7 @@
     <h1>Chúc mừng sinh nhật em yêu 🎉</h1>
     <p id="message"></p>
 
-    <button onclick="playMusic()">🎵 Phát nhạc</button>
+    <button onclick="playMusic()">🎵 Bấm để phát nhạc</button>
 
     <div class="photo-grid">
       <img src="anh1.jpg" alt="Ảnh 1">
@@ -143,24 +143,16 @@
       document.getElementById('step2').classList.remove('active');
       document.getElementById('step3').classList.add('active');
       document.getElementById('message').innerText = `${name} ơi, chúc em sinh nhật thật vui vẻ, luôn xinh đẹp và yêu anh nhiều hơn nữa 😘`;
-
-      // Tự động phát nhạc khi chuyển sang bước 3
-      const music = document.getElementById('bgmusic');
-      music.play().catch(() => {
-        console.log("Trình duyệt chặn autoplay, cần bấm nút.");
-      });
     }
 
     function playMusic() {
       const music = document.getElementById('bgmusic');
-      if (music.paused) {
-        music.play().then(() => {
-          console.log("Nhạc đã phát 🎶");
-        }).catch((error) => {
-          console.error("Không thể phát nhạc:", error);
-          alert("Trình duyệt đang chặn nhạc. Em hãy bấm nút lại lần nữa nha 😘");
-        });
-      }
+      music.play().then(() => {
+        console.log("Nhạc đã phát 🎶");
+      }).catch((error) => {
+        console.error("Không thể phát nhạc:", error);
+        alert("Trình duyệt đang chặn nhạc. Em hãy bấm nút lại lần nữa nha 😘");
+      });
     }
   </script>
 </body>
