@@ -77,57 +77,6 @@
       from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00cc; }
       to { text-shadow: 0 0 20px #fff, 0 0 40px #ff00cc; }
     }
-
-    .candle {
-      position: relative;
-      width: 20px;
-      height: 60px;
-      background: #ff6347;
-      margin: 30px auto;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .flame {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 15px;
-      height: 25px;
-      background: radial-gradient(circle, #ff0, #ffa500);
-      border-radius: 50%;
-      animation: flicker 0.3s infinite;
-    }
-
-    @keyframes flicker {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    .smoke {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 5px;
-      height: 30px;
-      background: linear-gradient(to top, rgba(255,255,255,0.5), transparent);
-      border-radius: 50%;
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-
-    .smoke.show {
-      opacity: 1;
-      animation: rise 2s ease-out forwards;
-    }
-
-    @keyframes rise {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(-50px); opacity: 0; }
-    }
   </style>
 </head>
 <body>
@@ -152,13 +101,8 @@
     <h1>Chúc mừng sinh nhật em yêu 🎉</h1>
     <p id="message"></p>
 
-    <!-- Cây nến -->
-    <div class="candle" onclick="blowCandle()">
-      <div class="flame" id="flame"></div>
-      <div class="smoke" id="smoke"></div>
-    </div>
-
     <button onclick="playMusic()">🎵 Phát nhạc</button>
+
     <div class="photo-grid">
       <img src="anh1.jpg" alt="Ảnh 1">
       <img src="anh2.jpg" alt="Ảnh 2">
@@ -199,21 +143,23 @@
       document.getElementById('step2').classList.remove('active');
       document.getElementById('step3').classList.add('active');
       document.getElementById('message').innerText = `${name} ơi, chúc em sinh nhật thật vui vẻ, luôn xinh đẹp và yêu anh nhiều hơn nữa 😘`;
+
+      // Tự động phát nhạc khi chuyển sang bước 3
+      const music = document.getElementById('bgmusic');
+      music.play().catch(() => {
+        console.log("Trình duyệt chặn autoplay, cần bấm nút.");
+      });
     }
 
     function playMusic() {
       const music = document.getElementById('bgmusic');
-      music.play().catch(() => {
-        alert("Em phải bấm nút để phát nhạc nha 😘");
-      });
-    }
-
-    function blowCandle() {
-      const flame = document.getElementById('flame');
-      const smoke = document.getElementById('smoke');
-      if (flame.style.display !== 'none') {
-        flame.style.display = 'none';
-        smoke.classList.add('show');
+      if (music.paused) {
+        music.play().then(() => {
+          console.log("Nhạc đã phát 🎶");
+        }).catch((error) => {
+          console.error("Không thể phát nhạc:", error);
+          alert("Trình duyệt đang chặn nhạc. Em hãy bấm nút lại lần nữa nha 😘");
+        });
       }
     }
   </script>
