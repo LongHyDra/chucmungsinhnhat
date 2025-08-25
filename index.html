@@ -30,6 +30,12 @@
       border: none;
       margin: 10px;
       width: 250px;
+      transition: transform 0.3s;
+    }
+
+    input:focus {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #ff69b4;
     }
 
     button {
@@ -77,17 +83,38 @@
       from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00cc; }
       to { text-shadow: 0 0 20px #fff, 0 0 40px #ff00cc; }
     }
+
+    .hint-text {
+      font-size: 1em;
+      color: #ffe4e1;
+      margin-bottom: 10px;
+      transition: opacity 0.5s;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      animation: floatUp 2s ease-out forwards;
+      color: #ff69b4;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-100px); }
+    }
   </style>
 </head>
 <body>
 
   <!-- Bước 1 -->
   <div class="form-container active" id="step1">
-    <h1>Nhập thông tin của em 💌</h1>
-    <input type="text" id="name" placeholder="Họ và tên">
+    <h1 class="animated-title">Nhập thông tin của em 💌</h1>
+    <input type="text" id="name" placeholder="Họ và tên" oninput="showHint()">
+    <div id="hint" class="hint-text"></div>
     <input type="date" id="dob">
     <br>
-    <button onclick="goToConfirm()">Tiếp tục</button>
+    <button onclick="goToConfirm(); showHearts()">Tiếp tục</button>
+    <div id="heart-container"></div>
   </div>
 
   <!-- Bước 2 -->
@@ -121,6 +148,30 @@
   <script>
     function normalize(str) {
       return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    }
+
+    function showHint() {
+      const name = document.getElementById('name').value.trim();
+      const hint = document.getElementById('hint');
+      if (name.length > 0) {
+        hint.innerText = `Chào ${name} nhé 💖`;
+        hint.style.opacity = 1;
+      } else {
+        hint.innerText = "";
+        hint.style.opacity = 0;
+      }
+    }
+
+    function showHearts() {
+      const container = document.getElementById('heart-container');
+      for (let i = 0; i < 10; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerText = '💗';
+        heart.style.left = `${Math.random() * 100}%`;
+        container.appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+      }
     }
 
     function goToConfirm() {
